@@ -9,7 +9,7 @@ class GitRepo {
         GitUser("login5")
     )
 
-    fun gerUsers(): List<GitUser>{
+    fun getUsers(): List<GitUser>{
         return repositories
     }
 

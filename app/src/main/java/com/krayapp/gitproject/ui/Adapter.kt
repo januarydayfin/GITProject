@@ -16,7 +16,8 @@ class Adapter (val presenter: IUserListPresenter) : RecyclerView.Adapter<Adapter
 
     override fun getItemCount() = presenter.getCount()
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = presenter.bindView(holder.apply { pos = position })
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+        presenter.bindView(holder.apply { pos = position })
 
     inner class ViewHolder(val vb: UserTemplateBinding) : RecyclerView.ViewHolder(vb.root),
         UserItemView {
