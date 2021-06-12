@@ -5,31 +5,17 @@ import com.krayapp.gitproject.data.GitRepo
 import com.krayapp.gitproject.data.GitUser
 import com.krayapp.gitproject.ui.AndroidScreens
 import com.krayapp.gitproject.ui.UsersView
-import io.reactivex.rxjava3.core.Observer
-import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 
 class UsersPresnter(val repo: GitRepo, val router: Router) : MvpPresenter<UsersView>() {
 
+    private var disposables = CompositeDisposable()
     val screens = AndroidScreens()
-    val userObserver = object : Observer<GitUser> {
-        var disposable: Disposable? = null
-        override fun onSubscribe(d: Disposable?) {
-            println("Subscribed")
-        }
 
-        override fun onNext(t: GitUser) {
-            addUser(t)
-        }
-
-        override fun onError(e: Throwable?) {
-            println("Error $e")
-        }
-
-        override fun onComplete() {
-            println("Completed")
-        }
-
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
     }
 
     class UsersListPresenter() : IUserListPresenter {
@@ -62,7 +48,9 @@ class UsersPresnter(val repo: GitRepo, val router: Router) : MvpPresenter<UsersV
     }
 
     fun loadData() {
-        repo.repositories().subscribe(userObserver)
+        disposables.add(repo.repositories
+            .doOnNext { gituser -> addUser(gituser) }
+            .subscribe())
         viewState.updateList()
     }
 
