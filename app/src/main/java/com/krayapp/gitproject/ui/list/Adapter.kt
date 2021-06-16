@@ -1,4 +1,4 @@
-package com.krayapp.gitproject.ui
+package com.krayapp.gitproject.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

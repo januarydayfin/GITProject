@@ -4,7 +4,7 @@ import com.github.terrakok.cicerone.Router
 import com.krayapp.gitproject.data.GitUser
 import com.krayapp.gitproject.data.retrofit2.IGithubUsersRepo
 import com.krayapp.gitproject.ui.IScreens
-import com.krayapp.gitproject.ui.UsersView
+import com.krayapp.gitproject.ui.list.UsersView
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter

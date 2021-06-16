@@ -1,4 +1,4 @@
-package com.krayapp.gitproject.ui
+package com.krayapp.gitproject.ui.list
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy

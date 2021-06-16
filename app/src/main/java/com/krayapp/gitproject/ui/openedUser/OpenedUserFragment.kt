@@ -1,14 +1,18 @@
-package com.krbinayapp.gitproject.ui
+package com.krayapp.gitproject.ui.openedUser
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
+import com.krayapp.gitproject.App
 import com.krayapp.gitproject.data.GitUser
 import com.krayapp.gitproject.databinding.OpenedUserLayoutBinding
+import com.krayapp.gitproject.presenter.OpenedUserPresenter
+import com.krayapp.gitproject.ui.AndroidScreens
 import moxy.MvpAppCompatFragment
+import moxy.ktx.moxyPresenter
 
-class OpenedUserFragment : MvpAppCompatFragment() {
+class OpenedUserFragment : MvpAppCompatFragment(), OpenedUserView {
     companion object {
         private const val ARG_KEY = "ARG_KEY"
         fun newInstance(gitUser: GitUser): OpenedUserFragment {
@@ -20,20 +24,23 @@ class OpenedUserFragment : MvpAppCompatFragment() {
         }
     }
 
-    private var user: GitUser? = null
+    private val presenter by moxyPresenter { OpenedUserPresenter(App.instance.router, AndroidScreens(), user = arguments?.getParcelable(ARG_KEY)!!) }
     private var binding: OpenedUserLayoutBinding? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        this.user = arguments?.getParcelable(ARG_KEY)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ) = OpenedUserLayoutBinding.inflate(inflater, container, false).also { binding = it }.root
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding?.loginIs?.text =  user?.login
+
+    override fun getRepositoryList() {
+
+    }
+
+    override fun init(gitUser: GitUser) {
+        binding?.loginIs?.text = gitUser.login
+        Glide.with(requireContext())
+            .load(gitUser.avatarUrl)
+            .into(binding?.avatarIn!!)
     }
 }

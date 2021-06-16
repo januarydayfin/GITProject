@@ -1,9 +1,9 @@
 package com.krayapp.gitproject.ui
 
-import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import com.krayapp.gitproject.data.GitUser
-import com.krbinayapp.gitproject.ui.OpenedUserFragment
+import com.krayapp.gitproject.ui.list.UsersFragment
+import com.krayapp.gitproject.ui.openedUser.OpenedUserFragment
 
 class AndroidScreens:IScreens {
     override fun users() = FragmentScreen {

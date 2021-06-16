@@ -1,4 +1,4 @@
-package com.krayapp.gitproject.ui
+package com.krayapp.gitproject.ui.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +10,8 @@ import com.krayapp.gitproject.data.retrofit2.ApiHolder
 import com.krayapp.gitproject.data.retrofit2.GitUsersRepoImpl
 import com.krayapp.gitproject.databinding.FragmentUsersBinding
 import com.krayapp.gitproject.presenter.UsersPresenter
+import com.krayapp.gitproject.ui.AndroidScreens
+import com.krayapp.gitproject.ui.BackButtonListener
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -20,7 +22,8 @@ class UsersFragment:MvpAppCompatFragment(), UsersView, BackButtonListener {
     }
 
     private val presenter by moxyPresenter { UsersPresenter(AndroidSchedulers.mainThread()
-        ,GitUsersRepoImpl(ApiHolder.api), App.instance.router, AndroidScreens()) }
+        ,GitUsersRepoImpl(ApiHolder.api), App.instance.router, AndroidScreens()
+    ) }
     private var adapter: Adapter? = null
     private var binding: FragmentUsersBinding? = null
 
