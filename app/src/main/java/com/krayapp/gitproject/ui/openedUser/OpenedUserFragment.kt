@@ -26,6 +26,7 @@ class OpenedUserFragment : MvpAppCompatFragment(), OpenedUserView {
 
     private val presenter by moxyPresenter { OpenedUserPresenter(App.instance.router, AndroidScreens(), user = arguments?.getParcelable(ARG_KEY)!!) }
     private var binding: OpenedUserLayoutBinding? = null
+    private var adapter:OpenedAdapter? = null
 
 
     override fun onCreateView(

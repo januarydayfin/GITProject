@@ -2,7 +2,6 @@ package com.krayapp.gitproject.presenter
 
 interface IItemView {
     var pos: Int
-
 }
 
 interface UserItemView: IItemView {
