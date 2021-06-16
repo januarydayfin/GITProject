@@ -7,6 +7,6 @@ import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface OpenedUserView:MvpView {
-    fun getRepositoryList()
+    fun updateRepositoryList()
     fun init(gitUser: GitUser)
 }

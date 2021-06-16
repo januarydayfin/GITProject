@@ -3,9 +3,12 @@ package com.krayapp.gitproject.ui.openedUser
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.krayapp.gitproject.App
 import com.krayapp.gitproject.data.GitUser
+import com.krayapp.gitproject.data.retrofit2.ApiHolder
+import com.krayapp.gitproject.data.retrofit2.GitUsersRepoImpl
 import com.krayapp.gitproject.databinding.OpenedUserLayoutBinding
 import com.krayapp.gitproject.presenter.OpenedUserPresenter
 import com.krayapp.gitproject.ui.AndroidScreens
@@ -24,7 +27,10 @@ class OpenedUserFragment : MvpAppCompatFragment(), OpenedUserView {
         }
     }
 
-    private val presenter by moxyPresenter { OpenedUserPresenter(App.instance.router, AndroidScreens(), user = arguments?.getParcelable(ARG_KEY)!!) }
+    private val presenter by moxyPresenter { OpenedUserPresenter(App.instance.router,
+        AndroidScreens(), user = arguments?.getParcelable(ARG_KEY)!!,
+        GitUsersRepoImpl(ApiHolder.api)
+    ) }
     private var binding: OpenedUserLayoutBinding? = null
     private var adapter:OpenedAdapter? = null
 
@@ -33,12 +39,16 @@ class OpenedUserFragment : MvpAppCompatFragment(), OpenedUserView {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ) = OpenedUserLayoutBinding.inflate(inflater, container, false).also { binding = it }.root
 
-
-    override fun getRepositoryList() {
-
+    override fun updateRepositoryList() {
+        adapter?.notifyDataSetChanged()
     }
 
+
     override fun init(gitUser: GitUser) {
+        binding?.gitrepoRecycler?.layoutManager = LinearLayoutManager(context)
+        adapter = OpenedAdapter(presenter.userGitRepoPresenter)
+        binding?.gitrepoRecycler?.adapter = adapter
+
         binding?.loginIs?.text = gitUser.login
         Glide.with(requireContext())
             .load(gitUser.avatarUrl)
