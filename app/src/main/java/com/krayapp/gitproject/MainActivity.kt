@@ -1,9 +1,7 @@
 package com.krayapp.gitproject
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.terrakok.cicerone.androidx.AppNavigator
-import com.krayapp.gitproject.data.GitRepo
 import com.krayapp.gitproject.databinding.ActivityMainBinding
 import com.krayapp.gitproject.presenter.Presenter
 import com.krayapp.gitproject.ui.AndroidScreens
