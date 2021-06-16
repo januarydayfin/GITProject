@@ -1,4 +1,4 @@
-package com.krayapp.gitproject.data
+package com.krayapp.gitproject.data.gituserinfo
 
 import android.os.Parcelable
 import com.google.gson.annotations.Expose

@@ -1,6 +1,6 @@
 package com.krayapp.gitproject.ui.openedUser
 
-import com.krayapp.gitproject.data.GitUser
+import com.krayapp.gitproject.data.gituserinfo.GitUser
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType

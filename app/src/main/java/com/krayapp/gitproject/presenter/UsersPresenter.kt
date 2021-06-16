@@ -1,7 +1,7 @@
 package com.krayapp.gitproject.presenter
 
 import com.github.terrakok.cicerone.Router
-import com.krayapp.gitproject.data.GitUser
+import com.krayapp.gitproject.data.gituserinfo.GitUser
 import com.krayapp.gitproject.data.retrofit2.IGithubUsersRepo
 import com.krayapp.gitproject.ui.IScreens
 import com.krayapp.gitproject.ui.list.UsersView
