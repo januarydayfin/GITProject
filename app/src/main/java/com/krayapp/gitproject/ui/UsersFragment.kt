@@ -1,7 +1,11 @@
 package com.krayapp.gitproject.ui
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.krayapp.gitproject.App
+import com.krayapp.gitproject.data.imageloader.ImageLoaderImpl
 import com.krayapp.gitproject.data.retrofit2.ApiHolder
 import com.krayapp.gitproject.data.retrofit2.GitUsersRepoImpl
 import com.krayapp.gitproject.databinding.FragmentUsersBinding
@@ -20,13 +24,17 @@ class UsersFragment:MvpAppCompatFragment(), UsersView, BackButtonListener {
     private var adapter: Adapter? = null
     private var binding: FragmentUsersBinding? = null
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        FragmentUsersBinding.inflate(inflater, container, false).also {
+            binding = it
+        }.root
     override fun onDestroy() {
         super.onDestroy()
         binding = null
     }
     override fun init() {
         binding?.rvUsers?.layoutManager = LinearLayoutManager(context)
-        adapter = Adapter(presenter.usersListPresenter)
+        adapter = Adapter(presenter.usersListPresenter, ImageLoaderImpl())
         binding?.rvUsers?.adapter = adapter
     }
 
