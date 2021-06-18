@@ -1,29 +1,36 @@
 package com.krayapp.gitproject.presenter
 
 import com.github.terrakok.cicerone.Router
-import com.krayapp.gitproject.data.GitRepo
-import com.krayapp.gitproject.data.GitUser
-import com.krayapp.gitproject.ui.AndroidScreens
-import com.krayapp.gitproject.ui.UsersView
+import com.krayapp.gitproject.data.gituserinfo.GitUser
+import com.krayapp.gitproject.data.retrofit2.IGithubUsersRepo
+import com.krayapp.gitproject.ui.IScreens
+import com.krayapp.gitproject.ui.list.UsersView
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 
-class UsersPresnter(val repo: GitRepo, val router: Router) : MvpPresenter<UsersView>() {
+class UsersPresenter(
+    val uiScheduler: Scheduler,
+    val repo: IGithubUsersRepo,
+    val router: Router,
+    val screens: IScreens
+) : MvpPresenter<UsersView>() {
 
     private var disposables = CompositeDisposable()
-    val screens = AndroidScreens()
 
     override fun onDestroy() {
         super.onDestroy()
         disposables.dispose()
     }
 
-    class UsersListPresenter() : IUserListPresenter {
+    class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GitUser>()
         override var itemClickListener: ((UserItemView) -> Unit)? = null
+
         override fun bindView(view: UserItemView) {
             val user = users[view.pos]
-            view.setLogin(user.login)
+            user.login?.let { view.setLogin(it) }
+            user.avatarUrl?.let { view.loadAvatar(it) }
         }
 
         override fun getCount(): Int {
@@ -48,13 +55,14 @@ class UsersPresnter(val repo: GitRepo, val router: Router) : MvpPresenter<UsersV
     }
 
     fun loadData() {
-        disposables.add(repo.repositories
-            .doOnNext { gituser -> addUser(gituser) }
-            .subscribe())
-        viewState.updateList()
-    }
-
-    fun addUser(gitUser: GitUser) {
-        usersListPresenter.users.add(gitUser)
+        repo.getUsers()
+            .observeOn(uiScheduler)
+            .subscribe({ repos ->
+                usersListPresenter.users.clear()
+                usersListPresenter.users.addAll(repos)
+                viewState.updateList()
+            }, {
+                println("Error ${it.message}")
+            })
     }
 }

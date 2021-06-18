@@ -1,13 +1,15 @@
-package com.krayapp.gitproject.ui
+package com.krayapp.gitproject.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.krayapp.gitproject.data.imageloader.IImageLoader
 import com.krayapp.gitproject.databinding.UserTemplateBinding
 import com.krayapp.gitproject.presenter.IUserListPresenter
 import com.krayapp.gitproject.presenter.UserItemView
 
-class Adapter (val presenter: IUserListPresenter) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+class Adapter (val presenter: IUserListPresenter, val imageLoader: IImageLoader<ImageView>) : RecyclerView.Adapter<Adapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(UserTemplateBinding.inflate(LayoutInflater.from(parent.context), parent, false)).apply {
@@ -25,6 +27,10 @@ class Adapter (val presenter: IUserListPresenter) : RecyclerView.Adapter<Adapter
 
         override fun setLogin(text: String) = with(vb) {
             tvLogin.text = text
+        }
+
+        override fun loadAvatar(url: String) {
+            imageLoader.loadInto(url,vb.listAvatar)
         }
     }
 }

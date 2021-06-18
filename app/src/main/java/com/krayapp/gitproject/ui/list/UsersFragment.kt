@@ -1,13 +1,18 @@
-package com.krayapp.gitproject.ui
+package com.krayapp.gitproject.ui.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.krayapp.gitproject.App
-import com.krayapp.gitproject.data.GitRepo
+import com.krayapp.gitproject.data.imageloader.ImageLoaderImpl
+import com.krayapp.gitproject.data.retrofit2.ApiHolder
+import com.krayapp.gitproject.data.retrofit2.GitUsersRepoImpl
 import com.krayapp.gitproject.databinding.FragmentUsersBinding
-import com.krayapp.gitproject.presenter.UsersPresnter
+import com.krayapp.gitproject.presenter.UsersPresenter
+import com.krayapp.gitproject.ui.AndroidScreens
+import com.krayapp.gitproject.ui.BackButtonListener
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
@@ -16,7 +21,9 @@ class UsersFragment:MvpAppCompatFragment(), UsersView, BackButtonListener {
         fun newInstance() = UsersFragment()
     }
 
-    private val presenter by moxyPresenter { UsersPresnter(GitRepo(), App.instance.router) }
+    private val presenter by moxyPresenter { UsersPresenter(AndroidSchedulers.mainThread()
+        ,GitUsersRepoImpl(ApiHolder.api), App.instance.router, AndroidScreens()
+    ) }
     private var adapter: Adapter? = null
     private var binding: FragmentUsersBinding? = null
 
@@ -24,14 +31,13 @@ class UsersFragment:MvpAppCompatFragment(), UsersView, BackButtonListener {
         FragmentUsersBinding.inflate(inflater, container, false).also {
             binding = it
         }.root
-
     override fun onDestroy() {
         super.onDestroy()
         binding = null
     }
     override fun init() {
         binding?.rvUsers?.layoutManager = LinearLayoutManager(context)
-        adapter = Adapter(presenter.usersListPresenter)
+        adapter = Adapter(presenter.usersListPresenter, ImageLoaderImpl())
         binding?.rvUsers?.adapter = adapter
     }
 
