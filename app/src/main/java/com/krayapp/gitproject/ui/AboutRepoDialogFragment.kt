@@ -14,7 +14,7 @@ class AboutRepoDialogFragment(private val forksCounter: Int) : MvpAppCompatDialo
                     dialog.cancel()
                 }
             builder.create()
-        }!!
+        }
     }
 
     fun startDialog(){

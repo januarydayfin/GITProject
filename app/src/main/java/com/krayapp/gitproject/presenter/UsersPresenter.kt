@@ -18,10 +18,7 @@ class UsersPresenter(
 
     private var disposables = CompositeDisposable()
 
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.dispose()
-    }
+
 
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GitUser>()
@@ -55,14 +52,21 @@ class UsersPresenter(
     }
 
     fun loadData() {
-        repo.getUsers()
-            .observeOn(uiScheduler)
-            .subscribe({ repos ->
-                usersListPresenter.users.clear()
-                usersListPresenter.users.addAll(repos)
-                viewState.updateList()
-            }, {
-                println("Error ${it.message}")
-            })
+        disposables.add(
+            repo.getUsers()
+                .observeOn(uiScheduler)
+                .subscribe({ repos ->
+                    usersListPresenter.users.clear()
+                    usersListPresenter.users.addAll(repos)
+                    viewState.updateList()
+                }, {
+                    println("Error ${it.message}")
+                })
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
     }
 }
