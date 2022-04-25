@@ -12,6 +12,7 @@ import com.krayapp.gitproject.ui.openedUser.GitRepoView
 import com.krayapp.gitproject.ui.openedUser.OpenedUserView
 import com.krayapp.gitproject.ui.openedUser.UserGitRepoPresenter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 
 class OpenedUserPresenter(
@@ -22,16 +23,20 @@ class OpenedUserPresenter(
 ) :
     MvpPresenter<OpenedUserView>() {
 
+    private var disposables = CompositeDisposable()
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init(user)
         loadRepos()
         userGitRepoPresenter.itemClickListener = {
-            repo.loadRepoForks(user.login!!,repoName = userGitRepoPresenter.repoList[it.pos].name!!)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { forkCounter ->
-                    router.navigateTo(screens.aboutUserRepo(forkCounter))
-                }
+            disposables.add(
+                repo.loadRepoForks(user.login!!,repoName = userGitRepoPresenter.repoList[it.pos].name!!)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { forkCounter ->
+                        router.navigateTo(screens.aboutUserRepo(forkCounter))
+                    }
+            )
         }
     }
 
@@ -50,7 +55,8 @@ class OpenedUserPresenter(
 
     var userGitRepoPresenter = UserGetRepoPresenter()
     fun loadRepos() {
-        repo.getRepoList(user.login!!)
+        disposables.add(
+            repo.getRepoList(user.login!!)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ currentRepos ->
                 userGitRepoPresenter.repoList.clear()
@@ -58,6 +64,11 @@ class OpenedUserPresenter(
                 viewState.updateRepositoryList()
             }, {
                 println("Error ${it.message}")
-            })
+            }))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
     }
 }
